@@ -12,14 +12,14 @@ body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   background: #f5f5f7;
-  overflow-x: hidden;
+  overflow-x: hidden; /* Prevents horizontal scroll */
 }
 
 .app {
-  max-width: 360px;
+  max-width: 320px;
   margin: auto;
-  padding: 20px;
-  padding-top: 60px;
+  padding: 15px;
+  padding-top: 60px; /* Changed: was overriding with just 60px */
 }
 
 h1 {
@@ -37,20 +37,20 @@ canvas {
   flex: 1;
   background: white;
   border-radius: 12px;
-  padding: 8px;
+  padding: 10px;
 }
 
 .side-buttons {
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  width: 85px;
+  gap: 12px;
+  width: 90px; /* Changed: was 150px, too wide */
 }
 
 .side-buttons button {
   flex: 1;
-  padding: 10px 6px;
-  font-size: 13px;
+  padding: 12px 8px;
+  font-size: 14px;
 }
 
 .main-buttons {
@@ -73,7 +73,7 @@ button:active {
 
 .main-buttons button {
   flex: 0 0 auto;
-  width: 145px;
+  width: 140px;
   padding: 18px;
   font-size: 18px;
 }
