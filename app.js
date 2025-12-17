@@ -88,11 +88,9 @@ function addTransaction(amount, type) {
 
 // Custom modal input
 function showAmountModal(type) {
-  // Create modal overlay
   const overlay = document.createElement("div");
   overlay.className = "modal-overlay";
   
-  // Create modal content
   const modal = document.createElement("div");
   modal.className = "modal";
   
@@ -127,12 +125,10 @@ function showAmountModal(type) {
   overlay.appendChild(modal);
   document.body.appendChild(overlay);
   
-  // Focus input and show keyboard
   setTimeout(() => {
     input.focus();
   }, 100);
   
-  // Handle confirm
   confirmBtn.onclick = () => {
     const num = parseFloat(input.value);
     if (!isNaN(num) && num > 0) {
@@ -141,22 +137,106 @@ function showAmountModal(type) {
     document.body.removeChild(overlay);
   };
   
-  // Handle cancel
   cancelBtn.onclick = () => {
     document.body.removeChild(overlay);
   };
   
-  // Handle overlay click (close modal)
   overlay.onclick = (e) => {
     if (e.target === overlay) {
       document.body.removeChild(overlay);
     }
   };
   
-  // Handle Enter key
   input.onkeypress = (e) => {
     if (e.key === "Enter") {
       confirmBtn.click();
+    }
+  };
+}
+
+// Custom confirmation modal
+function showConfirmModal(message, onConfirm) {
+  const overlay = document.createElement("div");
+  overlay.className = "modal-overlay";
+  
+  const modal = document.createElement("div");
+  modal.className = "modal";
+  
+  const title = document.createElement("h3");
+  title.textContent = message;
+  title.style.color = "#f39c12";
+  
+  const buttonContainer = document.createElement("div");
+  buttonContainer.className = "modal-buttons";
+  
+  const cancelBtn = document.createElement("button");
+  cancelBtn.textContent = "Cancel";
+  cancelBtn.className = "modal-btn cancel";
+  
+  const confirmBtn = document.createElement("button");
+  confirmBtn.textContent = "Delete";
+  confirmBtn.className = "modal-btn confirm";
+  confirmBtn.style.background = "#e74c3c";
+  
+  buttonContainer.appendChild(cancelBtn);
+  buttonContainer.appendChild(confirmBtn);
+  
+  modal.appendChild(title);
+  modal.appendChild(buttonContainer);
+  overlay.appendChild(modal);
+  document.body.appendChild(overlay);
+  
+  confirmBtn.onclick = () => {
+    onConfirm();
+    document.body.removeChild(overlay);
+  };
+  
+  cancelBtn.onclick = () => {
+    document.body.removeChild(overlay);
+  };
+  
+  overlay.onclick = (e) => {
+    if (e.target === overlay) {
+      document.body.removeChild(overlay);
+    }
+  };
+}
+
+// Custom alert modal
+function showAlertModal(message) {
+  const overlay = document.createElement("div");
+  overlay.className = "modal-overlay";
+  
+  const modal = document.createElement("div");
+  modal.className = "modal";
+  
+  const title = document.createElement("h3");
+  title.textContent = message;
+  title.style.color = "#3498db";
+  
+  const buttonContainer = document.createElement("div");
+  buttonContainer.className = "modal-buttons";
+  
+  const okBtn = document.createElement("button");
+  okBtn.textContent = "OK";
+  okBtn.className = "modal-btn confirm";
+  okBtn.style.background = "#3498db";
+  okBtn.style.width = "100%";
+  
+  buttonContainer.appendChild(okBtn);
+  
+  modal.appendChild(title);
+  modal.appendChild(buttonContainer);
+  overlay.appendChild(modal);
+  document.body.appendChild(overlay);
+  
+  okBtn.onclick = () => {
+    document.body.removeChild(overlay);
+  };
+  
+  overlay.onclick = (e) => {
+    if (e.target === overlay) {
+      document.body.removeChild(overlay);
     }
   };
 }
@@ -172,7 +252,7 @@ document.getElementById("spendBtn").onclick = () => {
 
 // Reset all data
 document.getElementById("resetBtn").onclick = () => {
-  if (confirm("Are you sure you want to delete all data?")) {
+  showConfirmModal("Delete all data?", () => {
     balances = [0];
     labels = [1];
     chart.data.labels = labels;
@@ -181,7 +261,7 @@ document.getElementById("resetBtn").onclick = () => {
     updateBalanceDisplay();
     lastEntryEl.textContent = "";
     localStorage.removeItem("balances");
-  }
+  });
 };
 
 // Undo last entry
@@ -204,7 +284,7 @@ document.getElementById("undoBtn").onclick = () => {
 
     lastEntryEl.textContent = "Last entry undone";
   } else {
-    alert("Nothing to undo");
+    showAlertModal("Nothing to undo");
   }
 };
 
