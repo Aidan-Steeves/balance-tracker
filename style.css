@@ -1,6 +1,7 @@
 * {
   -webkit-tap-highlight-color: transparent;
   touch-action: manipulation;
+  box-sizing: border-box; /* Added this */
 }
 
 button {
@@ -12,14 +13,15 @@ body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   background: #f5f5f7;
-  overflow-x: hidden; /* Prevents horizontal scroll */
+  overflow-x: hidden;
 }
 
 .app {
-  max-width: 320px;
+  max-width: 100%; /* Changed from 320px */
   margin: auto;
   padding: 15px;
-  padding-top: 60px; /* Changed: was overriding with just 60px */
+  padding-top: 60px;
+  box-sizing: border-box; /* Added this */
 }
 
 h1 {
@@ -29,7 +31,7 @@ h1 {
 
 .chart-container {
   display: flex;
-  gap: 10px;
+  gap: 8px; /* Reduced from 10px */
   align-items: stretch;
 }
 
@@ -38,19 +40,21 @@ canvas {
   background: white;
   border-radius: 12px;
   padding: 10px;
+  min-width: 0; /* Added this - allows canvas to shrink */
 }
 
 .side-buttons {
   display: flex;
   flex-direction: column;
   gap: 12px;
-  width: 90px; /* Changed: was 150px, too wide */
+  width: 75px; /* Reduced from 90px */
+  flex-shrink: 0; /* Added this */
 }
 
 .side-buttons button {
   flex: 1;
-  padding: 12px 8px;
-  font-size: 14px;
+  padding: 12px 6px; /* Reduced horizontal padding from 8px */
+  font-size: 13px; /* Reduced from 14px */
 }
 
 .main-buttons {
