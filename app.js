@@ -29,7 +29,7 @@ const chart = new Chart(ctx, {
       {
         label: "Balance",
         data: balances,
-        borderColor: "#2ecc71", // default, segments override
+        borderColor: "#2ecc71",
         segment: {
           borderColor: ctx =>
             ctx.p0.parsed.y < 0 || ctx.p1.parsed.y < 0 ? "#e74c3c" : "#2ecc71"
@@ -73,12 +73,12 @@ function addTransaction(amount, type) {
   saveData();
 
   ledger.push({
-  amount: amount,
-  type: type,
-  date: new Date().toISOString().split("T")[0]
-});
+    amount: amount,
+    type: type,
+    date: new Date().toISOString().split("T")[0]
+  });
 
-localStorage.setItem("ledger", JSON.stringify(ledger));
+  localStorage.setItem("ledger", JSON.stringify(ledger));
 
   lastEntryEl.textContent =
     type === "earn"
@@ -86,17 +86,88 @@ localStorage.setItem("ledger", JSON.stringify(ledger));
       : `− $${Math.abs(amount).toFixed(2)} spent`;
 }
 
+// Custom modal input
+function showAmountModal(type) {
+  // Create modal overlay
+  const overlay = document.createElement("div");
+  overlay.className = "modal-overlay";
+  
+  // Create modal content
+  const modal = document.createElement("div");
+  modal.className = "modal";
+  
+  const title = document.createElement("h3");
+  title.textContent = type === "earn" ? "Amount Earned" : "Amount Spent";
+  title.style.color = type === "earn" ? "#2ecc71" : "#e74c3c";
+  
+  const input = document.createElement("input");
+  input.type = "number";
+  input.inputMode = "decimal";
+  input.placeholder = "0.00";
+  input.className = "modal-input";
+  
+  const buttonContainer = document.createElement("div");
+  buttonContainer.className = "modal-buttons";
+  
+  const cancelBtn = document.createElement("button");
+  cancelBtn.textContent = "Cancel";
+  cancelBtn.className = "modal-btn cancel";
+  
+  const confirmBtn = document.createElement("button");
+  confirmBtn.textContent = "Confirm";
+  confirmBtn.className = "modal-btn confirm";
+  confirmBtn.style.background = type === "earn" ? "#2ecc71" : "#e74c3c";
+  
+  buttonContainer.appendChild(cancelBtn);
+  buttonContainer.appendChild(confirmBtn);
+  
+  modal.appendChild(title);
+  modal.appendChild(input);
+  modal.appendChild(buttonContainer);
+  overlay.appendChild(modal);
+  document.body.appendChild(overlay);
+  
+  // Focus input and show keyboard
+  setTimeout(() => {
+    input.focus();
+  }, 100);
+  
+  // Handle confirm
+  confirmBtn.onclick = () => {
+    const num = parseFloat(input.value);
+    if (!isNaN(num) && num > 0) {
+      addTransaction(type === "earn" ? num : -num, type);
+    }
+    document.body.removeChild(overlay);
+  };
+  
+  // Handle cancel
+  cancelBtn.onclick = () => {
+    document.body.removeChild(overlay);
+  };
+  
+  // Handle overlay click (close modal)
+  overlay.onclick = (e) => {
+    if (e.target === overlay) {
+      document.body.removeChild(overlay);
+    }
+  };
+  
+  // Handle Enter key
+  input.onkeypress = (e) => {
+    if (e.key === "Enter") {
+      confirmBtn.click();
+    }
+  };
+}
+
 // Event listeners for buttons
 document.getElementById("earnBtn").onclick = () => {
-  const val = prompt("Amount earned:");
-  const num = parseFloat(val);
-  if (!isNaN(num) && num > 0) addTransaction(num, "earn");
+  showAmountModal("earn");
 };
 
 document.getElementById("spendBtn").onclick = () => {
-  const val = prompt("Amount spent:");
-  const num = parseFloat(val);
-  if (!isNaN(num) && num > 0) addTransaction(-num, "spend");
+  showAmountModal("spend");
 };
 
 // Reset all data
@@ -116,7 +187,6 @@ document.getElementById("resetBtn").onclick = () => {
 // Undo last entry
 document.getElementById("undoBtn").onclick = () => {
   if (balances.length > 1) {
-    // Undo session data
     balances.pop();
     labels.pop();
 
@@ -127,7 +197,6 @@ document.getElementById("undoBtn").onclick = () => {
     updateBalanceDisplay();
     saveData();
 
-    // Undo permanent ledger entry
     if (ledger.length > 0) {
       ledger.pop();
       localStorage.setItem("ledger", JSON.stringify(ledger));

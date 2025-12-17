@@ -1,7 +1,7 @@
 * {
   -webkit-tap-highlight-color: transparent;
   touch-action: manipulation;
-  box-sizing: border-box; /* Added this */
+  box-sizing: border-box;
 }
 
 button {
@@ -9,19 +9,24 @@ button {
   user-select: none;
 }
 
+html, body {
+  overflow-x: hidden;
+  width: 100%;
+  position: relative;
+}
+
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   background: #f5f5f7;
-  overflow-x: hidden;
 }
 
 .app {
-  max-width: 100%; /* Changed from 320px */
+  max-width: 100%;
   margin: auto;
   padding: 15px;
   padding-top: 60px;
-  box-sizing: border-box; /* Added this */
+  box-sizing: border-box;
 }
 
 h1 {
@@ -31,7 +36,7 @@ h1 {
 
 .chart-container {
   display: flex;
-  gap: 8px; /* Reduced from 10px */
+  gap: 8px;
   align-items: stretch;
 }
 
@@ -40,21 +45,21 @@ canvas {
   background: white;
   border-radius: 12px;
   padding: 10px;
-  min-width: 0; /* Added this - allows canvas to shrink */
+  min-width: 0;
 }
 
 .side-buttons {
   display: flex;
   flex-direction: column;
   gap: 12px;
-  width: 75px; /* Reduced from 90px */
-  flex-shrink: 0; /* Added this */
+  width: 75px;
+  flex-shrink: 0;
 }
 
 .side-buttons button {
   flex: 1;
-  padding: 12px 6px; /* Reduced horizontal padding from 8px */
-  font-size: 13px; /* Reduced from 14px */
+  padding: 12px 6px;
+  font-size: 13px;
 }
 
 .main-buttons {
@@ -118,4 +123,102 @@ button:active {
   background: #3498db;
   color: white;
   cursor: pointer;
+}
+
+/* Modal Overlay */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  animation: fadeIn 0.2s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* Modal Box */
+.modal {
+  background: white;
+  border-radius: 20px;
+  padding: 30px 25px;
+  width: 85%;
+  max-width: 320px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+  animation: slideUp 0.3s ease;
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(50px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.modal h3 {
+  margin: 0 0 20px 0;
+  font-size: 22px;
+  text-align: center;
+  font-weight: 600;
+}
+
+/* Input Field */
+.modal-input {
+  width: 100%;
+  padding: 15px;
+  font-size: 24px;
+  border: 2px solid #ddd;
+  border-radius: 12px;
+  text-align: center;
+  font-weight: 500;
+  box-sizing: border-box;
+  transition: border-color 0.2s;
+}
+
+.modal-input:focus {
+  outline: none;
+  border-color: #3498db;
+}
+
+/* Button Container */
+.modal-buttons {
+  display: flex;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.modal-btn {
+  flex: 1;
+  padding: 14px;
+  font-size: 16px;
+  font-weight: 600;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: transform 0.1s, opacity 0.2s;
+}
+
+.modal-btn:active {
+  transform: scale(0.95);
+}
+
+.modal-btn.cancel {
+  background: #95a5a6;
+  color: white;
+}
+
+.modal-btn.confirm {
+  color: white;
 }
