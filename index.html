@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  
+  <!-- Make it work as a standalone app -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Balance">
+  
+  <!-- Add an app icon -->
+  <link rel="apple-touch-icon" href="icon.png">
+  
+  <title>Balance Tracker</title>
+
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<div class="app">
+  <h1 id="balance">$0.00</h1>
+
+  <div class="chart-container">
+    <canvas id="balanceChart"></canvas>
+    
+    <div class="side-buttons">
+      <button class="undo" id="undoBtn">Undo</button>
+      <button class="reset" id="resetBtn">Reset All</button>
+      <button class="data" id="dataBtn">Data</button>
+    </div>
+  </div>
+
+  <div class="main-buttons">
+    <button class="earn" id="earnBtn">+ Earned</button>
+    <button class="spend" id="spendBtn">− Spent</button>
+  </div>
+
+  <p id="lastEntry"></p>
+</div>
+
+  <script src="app.js"></script>
+</body>
+</html>
