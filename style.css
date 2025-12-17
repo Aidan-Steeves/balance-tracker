@@ -16,9 +16,9 @@ body {
 }
 
 .app {
-  max-width: 340px;
+  max-width: 320px;
   margin: auto;
-  padding: 20px;
+  padding: 15px;
   padding-top: 60px; /* Changed: was overriding with just 60px */
 }
 
@@ -29,7 +29,7 @@ h1 {
 
 .chart-container {
   display: flex;
-  gap: 12px;
+  gap: 10px;
   align-items: stretch;
 }
 
@@ -44,7 +44,7 @@ canvas {
   display: flex;
   flex-direction: column;
   gap: 12px;
-  width: 100px; /* Changed: was 150px, too wide */
+  width: 90px; /* Changed: was 150px, too wide */
 }
 
 .side-buttons button {
@@ -55,7 +55,7 @@ canvas {
 
 .main-buttons {
   display: flex;
-  gap: 12px;
+  gap: 10px;
   margin-top: 20px;
   justify-content: center;
 }
@@ -73,7 +73,7 @@ button:active {
 
 .main-buttons button {
   flex: 0 0 auto;
-  width: 150px;
+  width: 140px;
   padding: 18px;
   font-size: 18px;
 }
