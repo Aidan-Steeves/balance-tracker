@@ -1,6 +1,7 @@
 * {
   -webkit-tap-highlight-color: transparent;
   touch-action: manipulation;
+  box-sizing: border-box; /* Added: helps with width calculations */
 }
 
 button {
@@ -12,14 +13,16 @@ body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   background: #f5f5f7;
-  overflow-x: hidden; /* Prevents horizontal scroll */
+  overflow-x: hidden;
+  width: 100vw; /* Added: prevents horizontal scroll */
 }
 
 .app {
-  max-width: 320px;
+  max-width: 100%; /* Changed: let it adapt to screen */
+  width: calc(100vw - 40px); /* Changed: screen width minus padding */
   margin: auto;
-  padding: 15px;
-  padding-top: 60px; /* Changed: was overriding with just 60px */
+  padding: 20px;
+  padding-top: 60px;
 }
 
 h1 {
@@ -29,8 +32,9 @@ h1 {
 
 .chart-container {
   display: flex;
-  gap: 10px;
+  gap: 12px;
   align-items: stretch;
+  width: 100%; /* Added */
 }
 
 canvas {
@@ -38,13 +42,15 @@ canvas {
   background: white;
   border-radius: 12px;
   padding: 10px;
+  min-width: 0; /* Added: allows flex item to shrink */
 }
 
 .side-buttons {
   display: flex;
   flex-direction: column;
   gap: 12px;
-  width: 90px; /* Changed: was 150px, too wide */
+  width: 90px;
+  flex-shrink: 0; /* Added: keeps buttons from shrinking */
 }
 
 .side-buttons button {
@@ -55,9 +61,10 @@ canvas {
 
 .main-buttons {
   display: flex;
-  gap: 10px;
+  gap: 12px;
   margin-top: 20px;
   justify-content: center;
+  width: 100%; /* Added */
 }
 
 button {
@@ -72,8 +79,8 @@ button:active {
 }
 
 .main-buttons button {
-  flex: 0 0 auto;
-  width: 140px;
+  flex: 1; /* Changed: let them share space equally */
+  max-width: 150px; /* Changed: cap the width */
   padding: 18px;
   font-size: 18px;
 }
