@@ -14,10 +14,14 @@
   
   <title>Data</title>
   <style>
+    * {
+      box-sizing: border-box;
+    }
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       padding: 20px;
       background: #f5f5f7;
+      margin: 0;
     }
     h2 {
       text-align: center;
@@ -50,6 +54,84 @@
       cursor: pointer;
       width: auto;
     }
+    
+    /* Modal Styles */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      animation: fadeIn 0.2s ease;
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    
+    .modal {
+      background: white;
+      border-radius: 20px;
+      padding: 30px 25px;
+      width: 85%;
+      max-width: 320px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+      animation: slideUp 0.3s ease;
+    }
+    
+    @keyframes slideUp {
+      from {
+        transform: translateY(50px);
+        opacity: 0;
+      }
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+    
+    .modal h3 {
+      margin: 0 0 20px 0;
+      font-size: 22px;
+      text-align: center;
+      font-weight: 600;
+    }
+    
+    .modal-buttons {
+      display: flex;
+      gap: 12px;
+      margin-top: 20px;
+    }
+    
+    .modal-btn {
+      flex: 1;
+      padding: 14px;
+      font-size: 16px;
+      font-weight: 600;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: transform 0.1s, opacity 0.2s;
+    }
+    
+    .modal-btn:active {
+      transform: scale(0.95);
+    }
+    
+    .modal-btn.cancel {
+      background: #95a5a6;
+      color: white;
+    }
+    
+    .modal-btn.confirm {
+      color: white;
+    }
   </style>
 </head>
 <body>
@@ -70,11 +152,60 @@
   <tbody id="tableBody"></tbody>
 </table>
 <script>
-document.addEventListener("DOMContentLoaded", () => {
+// Custom confirmation modal
+function showConfirmModal(message, onConfirm) {
+  const overlay = document.createElement("div");
+  overlay.className = "modal-overlay";
+  
+  const modal = document.createElement("div");
+  modal.className = "modal";
+  
+  const title = document.createElement("h3");
+  title.textContent = message;
+  title.style.color = "#f39c12";
+  
+  const buttonContainer = document.createElement("div");
+  buttonContainer.className = "modal-buttons";
+  
+  const cancelBtn = document.createElement("button");
+  cancelBtn.textContent = "Cancel";
+  cancelBtn.className = "modal-btn cancel";
+  
+  const confirmBtn = document.createElement("button");
+  confirmBtn.textContent = "Delete";
+  confirmBtn.className = "modal-btn confirm";
+  confirmBtn.style.background = "#e74c3c";
+  
+  buttonContainer.appendChild(cancelBtn);
+  buttonContainer.appendChild(confirmBtn);
+  
+  modal.appendChild(title);
+  modal.appendChild(buttonContainer);
+  overlay.appendChild(modal);
+  document.body.appendChild(overlay);
+  
+  confirmBtn.onclick = function() {
+    onConfirm();
+    document.body.removeChild(overlay);
+  };
+  
+  cancelBtn.onclick = function() {
+    document.body.removeChild(overlay);
+  };
+  
+  overlay.onclick = function(e) {
+    if (e.target === overlay) {
+      document.body.removeChild(overlay);
+    }
+  };
+}
+
+document.addEventListener("DOMContentLoaded", function() {
   const ledger = JSON.parse(localStorage.getItem("ledger")) || [];
   const daily = {};
+  
   // Aggregate daily totals
-  ledger.forEach(entry => {
+  ledger.forEach(function(entry) {
     if (!daily[entry.date]) {
       daily[entry.date] = { earn: 0, spend: 0 };
     }
@@ -84,9 +215,10 @@ document.addEventListener("DOMContentLoaded", () => {
       daily[entry.date].spend += Math.abs(entry.amount);
     }
   });
+  
   // Populate daily summary table
   const tbody = document.getElementById("tableBody");
-  Object.keys(daily).forEach(date => {
+  Object.keys(daily).forEach(function(date) {
     const net = daily[date].earn - daily[date].spend;
     tbody.innerHTML += `
       <tr>
@@ -97,10 +229,11 @@ document.addEventListener("DOMContentLoaded", () => {
       </tr>
     `;
   });
+  
   // Function to generate CSV from daily summary
   function exportToCSV() {
     let csv = "Date,Earned,Spent,Net\n";
-    Object.keys(daily).forEach(date => {
+    Object.keys(daily).forEach(function(date) {
       const earned = daily[date].earn.toFixed(2);
       const spent = daily[date].spend.toFixed(2);
       const net = (daily[date].earn - daily[date].spend).toFixed(2);
@@ -108,17 +241,19 @@ document.addEventListener("DOMContentLoaded", () => {
     });
     downloadCSV(csv);
   }
+  
   // Function to generate CSV from raw ledger entries
   function exportRawLedgerCSV() {
     let csv = "Date,Type,Amount,Balance\n";
     let runningBalance = 0;
-    ledger.forEach(entry => {
+    ledger.forEach(function(entry) {
       runningBalance += entry.amount;
       const typeText = entry.type === "earn" ? "Earned" : "Spent";
       csv += `${entry.date},${typeText},${entry.amount.toFixed(2)},${runningBalance.toFixed(2)}\n`;
     });
     downloadCSV(csv);
   }
+  
   // Helper function to download CSV
   function downloadCSV(csvText) {
     const blob = new Blob([csvText], { type: "text/csv" });
@@ -129,15 +264,17 @@ document.addEventListener("DOMContentLoaded", () => {
     a.click();
     URL.revokeObjectURL(url);
   }
+  
   // Hook buttons
   document.getElementById("exportBtn").onclick = exportToCSV;
   document.getElementById("exportRawBtn").onclick = exportRawLedgerCSV;
-  // ✅ Clear all ledger data button
-  document.getElementById("clearDataBtn").onclick = () => {
-    if (confirm("Are you sure you want to clear all saved data? This cannot be undone.")) {
+  
+  // Clear all ledger data button with custom modal
+  document.getElementById("clearDataBtn").onclick = function() {
+    showConfirmModal("Clear all saved data?", function() {
       localStorage.removeItem("ledger");
-      location.reload(); // refresh page to show empty table
-    }
+      location.reload();
+    });
   };
 });
 </script>
