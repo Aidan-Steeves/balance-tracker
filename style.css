@@ -15,9 +15,10 @@ body {
 }
 
 .app {
-  max-width: 420px;
+  max-width: 380px;
   margin: auto;
   padding: 20px;
+  padding: 60px;
 }
 
 h1 {
